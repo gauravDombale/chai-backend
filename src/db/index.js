@@ -23,9 +23,11 @@ const connectDB = async () => {
       }
     }
     
-    const connectionInstance = await mongoose.connect(
-      `${process.env.MONGODB_URI}/${DB_NAME}`
-    );
+    // Connect without concatenating DB name into the URI to avoid issues with
+    // trailing slashes or duplicate DB names. Pass dbName via options.
+    const connectionInstance = await mongoose.connect(process.env.MONGODB_URI, {
+      dbName: DB_NAME,
+    });
     console.log(
       "Connected to MongoDB successfully to host:",
       connectionInstance.connection.host
